@@ -28,6 +28,7 @@ are made using ffmpeg.
 
 import mpl_toolkits.mplot3d.art3d as art3d
 from mpl_toolkits.mplot3d import proj3d
+from mpl_toolkits.mplot3d import Axes3D
 import matplotlib
 
 matplotlib.use("Agg")
@@ -80,7 +81,7 @@ class Arrow3D(FancyArrowPatch):
 
     def draw(self, renderer):
         xs3d, ys3d, zs3d = self._verts3d
-        xs, ys, zs = proj3d.proj_transform(xs3d, ys3d, zs3d, renderer.M)
+        xs, ys, zs = proj3d.proj_transform(xs3d, ys3d, zs3d, self.axes.M)
         self.set_positions((xs[0], ys[0]), (xs[1], ys[1]))
         FancyArrowPatch.draw(self, renderer)
 
@@ -116,8 +117,8 @@ def plotFrame3D(config, vectors, frame, output):
     axLimit = max(nx, ny, nz) / 2 + 0.5
     if config["collapseLocations"]:
         axLimit = 1.0
-    ax = fig.gca(
-        projection="3d",
+    ax = fig.add_subplot(111, projection="3d")
+    ax.set(
         xlim=(-axLimit, axLimit),
         ylim=(-axLimit, axLimit),
         zlim=(-axLimit, axLimit),
@@ -334,8 +335,9 @@ def plotFrameMT(config, signal, frame, output):
             ymin, ymax = 0, 1
     elif output["type"] == "z":
         ymin, ymax = -1, 1
-    fig = plt.figure(figsize=(5, 2.7), facecolor=colors["bg"], dpi=output["dpi"])
-    ax = fig.gca(xlim=(xmin, xmax), ylim=(ymin, ymax), fc=colors["bg"])
+    fig, ax = plt.subplots(figsize=(5, 2.7), facecolor=colors["bg"], dpi=output["dpi"])
+    ax.set(xlim=(xmin, xmax), ylim=(ymin, ymax), fc=colors["bg"])
+    # ax = fig.gca()
     for side in ["bottom", "right", "top", "left"]:
         ax.spines[side].set_visible(False)  # remove default axes
     ax.grid()
@@ -487,8 +489,8 @@ def plotFrameKspace(config, frame, output):
     kmax = 1 / (2 * config["locSpacing"])
     xmin, xmax = -kmax, kmax
     ymin, ymax = -kmax, kmax
-    fig = plt.figure(figsize=(5, 5), facecolor=colors["bg"], dpi=output["dpi"])
-    ax = fig.gca(xlim=(xmin, xmax), ylim=(ymin, ymax), fc=colors["bg"])
+    fig, ax = plt.subplots(figsize=(5, 5), facecolor=colors["bg"], dpi=output["dpi"])
+    ax.set(xlim=(xmin, xmax), ylim=(ymin, ymax), fc=colors["bg"])
     for side in ["bottom", "right", "top", "left"]:
         ax.spines[side].set_color(colors["text"])
     ax.grid()
@@ -532,8 +534,8 @@ def plotFramePSD(config, frame, output):
     else:
         xmin, xmax = output["tRange"]
         ymin, ymax = 0, 5
-        fig = plt.figure(figsize=(5, 5), facecolor=colors["bg"], dpi=output["dpi"])
-        ax = fig.gca(xlim=(xmin, xmax), ylim=(ymin, ymax), fc=colors["bg"])
+        fig, ax = plt.subplots(figsize=(5, 5), facecolor=colors["bg"], dpi=output["dpi"])
+        ax.set(xlim=(xmin, xmax), ylim=(ymin, ymax), fc=colors["bg"])
         for side in ["bottom", "right", "top", "left"]:
             ax.spines[side].set_visible(False)  # remove default axes
         plt.title(config["title"], color=colors["text"])
