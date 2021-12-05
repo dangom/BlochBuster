@@ -353,8 +353,8 @@ def plotFrameMT(config, signal, frame, output):
     elif output["type"] == "z":
         ax.xaxis.set_label_coords(1.1, 0.475)
         plt.ylabel("$M_z$", rotation=0, color=colors["text"])
-    ax.yaxis.set_label_coords(-0.07, 0.95)
-    plt.tick_params(axis="y", labelleft="off")
+    ax.yaxis.set_label_coords(-0.07, 1.02)
+    plt.tick_params(axis="y", labelleft="off", colors=colors["text"])
     plt.tick_params(axis="x", colors=colors["text"])
     ax.xaxis.set_ticks_position("none")  # tick markers
     ax.yaxis.set_ticks_position("none")
